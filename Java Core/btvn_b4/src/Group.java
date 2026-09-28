@@ -1,0 +1,7 @@
+import java.time.LocalDate;
+
+public class Group {
+    int id;
+    String groupName;
+    LocalDate createDate;
+}
