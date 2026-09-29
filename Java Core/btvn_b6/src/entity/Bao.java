@@ -1,21 +1,21 @@
 package entity;
 
 public class Bao extends TaiLieu {
-    private String ngayPhatHanh;
+    private int ngayPhatHanh;
 
     public Bao() {
     }
 
-    public Bao(String maTaiLieu, int soBanPhatHanh, String tenNhaXb, String ngayPhatHanh) {
+    public Bao(String maTaiLieu, int soBanPhatHanh, String tenNhaXb, int ngayPhatHanh) {
         super(maTaiLieu, soBanPhatHanh, tenNhaXb);
         this.ngayPhatHanh = ngayPhatHanh;
     }
 
-    public String getNgayPhatHanh() {
+    public int getNgayPhatHanh() {
         return ngayPhatHanh;
     }
 
-    public void setNgayPhatHanh(String ngayPhatHanh) {
+    public void setNgayPhatHanh(int ngayPhatHanh) {
         this.ngayPhatHanh = ngayPhatHanh;
     }
 }

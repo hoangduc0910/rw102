@@ -25,13 +25,16 @@ public class Program {
             String choice = scanner.nextLine();
             switch (choice){
                 case "1":
+                    iqltv.themMoiTaiLieu();
                     break;
                 case "2":
+                    iqltv.xoaTaiLieuTheoMa();
                     break;
                 case "3":
                     iqltv.hienThiTaiLieu();
                     break;
                 case "4":
+                    iqltv.timKiemTheoLoai();
                     break;
                 case "5":
                     System.out.println("THOÁT.");
