@@ -1,25 +1,23 @@
 package entity;
 
-import javax.swing.text.Position;
-
 public class Account {
     private int id;
-    private String username;
+    private String userName;
     private String fullName;
     private String email;
     private Department department;
-    private  Position position;
+    private Position position;
 
     public Account() {
     }
 
-    public Account(int id, Position position, Department department, String email, String username, String fullName) {
+    public Account(int id, Position position, Department department, String fullName, String email, String userName) {
         this.id = id;
         this.position = position;
         this.department = department;
-        this.email = email;
-        this.username = username;
         this.fullName = fullName;
+        this.email = email;
+        this.userName = userName;
     }
 
     public int getId() {
@@ -62,11 +60,11 @@ public class Account {
         this.fullName = fullName;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
