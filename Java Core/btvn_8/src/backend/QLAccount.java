@@ -4,17 +4,19 @@ import entity.Account;
 import entity.Department;
 import entity.Position;
 import entity.PositionName;
+import utils.JDBCUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class QL implements IQL {
+public class QLAccount implements IQLAccount {
+    Scanner sc = new Scanner(System.in);
+
     @Override
     public void hienThiToanBoAccount() {
         List<Account> accounts = new ArrayList<>();
-
         try {
             String url = "jdbc:mysql://localhost:3306/btvn_8";
             String username = "root";
@@ -72,8 +74,8 @@ public class QL implements IQL {
             Connection connection = DriverManager.getConnection(url, username, password);
             String sql = "Select *\n" +
                     "FROM account acc\n" +
-                    "join department dep on acc.department_id = dep.department_id\n" +
-                    "join position pos on acc.position_id = pos.position_id\n" +
+                    "left join department dep on acc.department_id = dep.department_id\n" +
+                    "left join position pos on acc.position_id = pos.position_id\n" +
                     "WHERE username Like ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1,"%" + name + "%");
@@ -109,72 +111,123 @@ public class QL implements IQL {
     }
 
     @Override
-    public void hienThiDepartment() {
-        List<Department> departments = new ArrayList<>();
+    public void themMoiAccount() {
+        System.out.println("=== Thêm mới account ===");
+        System.out.println("Nhập username");
+        String userName = new Scanner(System.in).nextLine();
+        System.out.println("Nhập fullname");
+        String fullName = sc.nextLine();
+        System.out.println("Nhập email");
+        String email = sc.nextLine();
+        System.out.println("Nhập position_id");
+        int positionId = sc.nextInt();
+        sc.nextLine();
+//        System.out.println("Chọn position_name:    1.DEV    2.TEST    3.PM    Khác.SCRUM_MASTER");
+//        PositionName positionName = null;
+//        String choice = sc.nextLine();
+//        switch (choice){
+//            case "1":
+//                positionName = PositionName.DEV;
+//                break;
+//            case "2":
+//                positionName = PositionName.TEST;
+//                break;
+//            case "3":
+//                positionName = PositionName.PM;
+//                break;
+//            default:
+//                positionName = PositionName.SCRUM_MASTER;
+//        }
+//        Position position = new Position(positionId, positionName);
+        System.out.println("Nhập department_id");
+        int departmentId = sc.nextInt();
+        sc.nextLine();
+//        System.out.println("Nhập department_name");
+//        String departmentName = sc.nextLine();
+//        Department department = new Department(departmentId, departmentName);
 
+        String sql =String.format("insert into account(username,full_name, email, position_id, department_id) values (?,?,?,?,?) ");
 
-        //Tạo kết nối đến database
         try {
-            String url = "jdbc:mysql://localhost:3306/btvn_8";
-            String username = "root";
-            String password = "root";
-            Connection connection = DriverManager.getConnection(url, username, password);
-            String sql = "SELECT * FROM department";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
+            Connection connection = JDBCUtils.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, userName);
+            preparedStatement.setString(2, fullName);
+            preparedStatement.setString(3, email);
+            preparedStatement.setInt(4, positionId);
+            preparedStatement.setInt(5, departmentId);
 
-            while (resultSet.next()){
-            int id = resultSet.getInt("department_id");
-            String name = resultSet.getString("department_name");
-            departments.add(new Department(id, name));
+
+            int c = preparedStatement.executeUpdate();
+
+            if (c>0){
+                System.out.println("Thêm thành công");
+            }else {
+                System.out.println("Thêm thất bại");
             }
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        }finally {
+            JDBCUtils.closeConnection();
         }
-        System.out.println("Hiển Thị Department");
-        System.out.println("+----------+------------------------------");
-        System.out.printf("|%10s|%30s|\n", "id", "department_name");
-        System.out.println("+----------+------------------------------");
-        for (Department dep: departments){
-            System.out.printf("|%10s|%30s|\n", dep.getId(), dep.getName());
-        }
-        System.out.println("+----------+------------------------------");
     }
 
     @Override
-    public void timKiemDepartmentTheoTen() {
-        System.out.println("==== TÌM DEPARTMENT ==== ");
-        System.out.println("==== NHẬP DEPARTMENT NAME ==== ");
-        String name = new Scanner(System.in).nextLine();
-        List<Department> departments = new ArrayList<>();
+    public void xoaAccountTheousUsername() {
+        System.out.println("=== Xóa account theo username ===");
+        System.out.println("Nhập username");
+        String userName =sc.nextLine();
 
-        //Tạo kết nối đến database
+        Connection connection = JDBCUtils.getConnection();
+        String sql = "delete from account where username = ?";
         try {
-            String url = "jdbc:mysql://localhost:3306/btvn_8";
-            String username = "root";
-            String password = "root";
-            Connection connection = DriverManager.getConnection(url, username, password);
-            String sql = "SELECT * from department WHERE department_name like ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, "%" + name + "%");
+            PreparedStatement preparedStatement =connection.prepareStatement(sql);
+            preparedStatement.setString(1, userName);
 
-            ResultSet resultSet = statement.executeQuery();
+            int c = preparedStatement.executeUpdate();
 
-            while (resultSet.next()){
-                int id = resultSet.getInt("department_id");
-                String departmentName = resultSet.getString("department_name");
-                departments.add(new Department(id, departmentName));
+            if (c>0){
+                System.out.println("Xóa thành công");
+            }else {
+                System.out.println("Xóa thất bại");
             }
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        }finally {
+            JDBCUtils.closeConnection();
         }
-        System.out.println("Hiển Thị Department");
-        System.out.println("+----------+------------------------------");
-        System.out.printf("|%10s|%30s|\n", "id", "department_name");
-        System.out.println("+----------+------------------------------");
-        for (Department dep: departments){
-            System.out.printf("|%10s|%30s|\n", dep.getId(), dep.getName());
+    }
+
+    @Override
+    public void capNhatfullnameTheousUsername() {
+        System.out.println("Update fullname theo username");
+        System.out.println("Nhập username");
+        String userName =sc.nextLine();
+        System.out.println("Nhập fullname cần đổi");
+        String fullName =sc.nextLine();
+
+        Connection connection = JDBCUtils.getConnection();
+        String sql = "update account set full_name = ? where username = ?";
+        try {
+            PreparedStatement preparedStatement =connection.prepareStatement(sql);
+            preparedStatement.setString(1,fullName);
+            preparedStatement.setString(2,userName);
+
+            int c = preparedStatement.executeUpdate();
+            if (c>0){
+                System.out.println("Cập nhật thành công");
+            }else {
+                System.out.println("Cập nhật thất bại");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            JDBCUtils.closeConnection();
         }
-        System.out.println("+----------+------------------------------");
+
+
     }
 }
