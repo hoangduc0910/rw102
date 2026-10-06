@@ -13,8 +13,6 @@ public class QLDepartment implements IQLDepartment {
     @Override
     public void hienThiDepartment() {
         List<Department> departments = new ArrayList<>();
-
-
         //Tạo kết nối đến database
         try {
             String url = "jdbc:mysql://localhost:3306/btvn_8";
@@ -31,8 +29,11 @@ public class QLDepartment implements IQLDepartment {
                 departments.add(new Department(id, name));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        }finally {
+            JDBCUtils.closeConnection();
         }
+
         System.out.println("Hiển Thị Department");
         System.out.println("+----------+------------------------------");
         System.out.printf("|%10s|%30s|\n", "id", "department_name");
@@ -47,9 +48,8 @@ public class QLDepartment implements IQLDepartment {
     public void timKiemDepartmentTheoTen() {
         System.out.println("==== TÌM DEPARTMENT ==== ");
         System.out.println("==== NHẬP DEPARTMENT NAME ==== ");
-        String name = new Scanner(System.in).nextLine();
+        String name = sc.nextLine();
         List<Department> departments = new ArrayList<>();
-
         //Tạo kết nối đến database
         try {
             String url = "jdbc:mysql://localhost:3306/btvn_8";
@@ -68,8 +68,11 @@ public class QLDepartment implements IQLDepartment {
                 departments.add(new Department(id, departmentName));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+           e.printStackTrace();
+        }finally {
+            JDBCUtils.closeConnection();
         }
+
         System.out.println("Hiển Thị Department");
         System.out.println("+----------+------------------------------");
         System.out.printf("|%10s|%30s|\n", "id", "department_name");
