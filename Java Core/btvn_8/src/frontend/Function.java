@@ -8,6 +8,7 @@ import backend.controller.QLAccountController;
 import backend.controller.QLDepartmentController;
 import entity.Account;
 import entity.Department;
+import entity.Position;
 
 import java.util.List;
 import java.util.Scanner;
@@ -100,7 +101,22 @@ public class Function {
     public void deleteAccountByName(){
         System.out.println("=== Xóa account theo username ===");
         System.out.println("Nhập username");
-        String userName =sc.nextLine();
+        String userName;
+        while (true){
+            userName = sc.nextLine();
+            if (userName.length() < 5 || userName.length() > 50){
+                System.err.println("Username phải có độ dài từ 5 đến 50 ký tự");
+                continue;
+            }
+
+            boolean check = qlAccountController.deleteIfExits(userName);
+            if (check){
+                System.err.println("Username đã tồn tại");
+                continue;
+            }
+            break;
+        }
+
         boolean check = qlAccountController.deleteAccountByName(userName);
         if (check){
             System.out.println("Xóa account thành công");
@@ -125,9 +141,32 @@ public class Function {
     public void updateFullNameTheoUsermane(){
         System.out.println("Update fullname theo username");
         System.out.println("Nhập username");
-        String userName =sc.nextLine();
+        String userName ;
+        while (true){
+            userName = sc.nextLine();
+            if (userName.length() < 5 || userName.length() > 50){
+                System.err.println("Username phải có độ dài từ 5 đến 50 ký tự");
+                continue;
+            }
+
+            boolean check = qlAccountController.exitsByUserName(userName);
+            if (check){
+                System.err.println("Username đã tồn tại");
+                continue;
+            }
+            break;
+        }
         System.out.println("Nhập fullname cần đổi");
-        String fullName =sc.nextLine();
+        String fullName;
+        while (true){
+            fullName = sc.nextLine();
+            if (fullName.length() < 5 || fullName.length() > 50){
+                System.err.println("Fullname phải có độ dài từ 5 đến 50 ký tự");
+                continue;
+            }
+            break;
+        }
+
 
         boolean check = qlAccountController.updateFullNameByUsername(userName, fullName);
 
@@ -151,6 +190,126 @@ public class Function {
             System.out.println("Cập nhật department thành công");
         }else {
             System.out.println("Cập nhật department thất bại");
+        }
+    }
+
+    //them moi
+    public void themMoiAccount(){
+        System.out.println("=== THÊM MỚI ACCOUNT ===");
+        System.out.println("Nhập username");
+        String username ;
+        while (true){
+            username = sc.nextLine();
+            if (username.length() < 5 || username.length() > 50){
+                System.err.println("Username phải có độ dài từ 5 đến 50 ký tự");
+                continue;
+            }
+
+            boolean check = qlAccountController.exitsByUserName(username);
+            if (check){
+                System.err.println("Username đã tồn tại");
+                continue;
+            }
+            break;
+        }
+        System.out.println("Nhập fullname");
+        String fullName ;
+            while (true){
+                fullName = sc.nextLine();
+                if (fullName.length() < 5 || fullName.length() > 50){
+                    System.err.println("Fullname phải có độ dài từ 5 đến 50 ký tự");
+                    continue;
+                }
+                break;
+            }
+        System.out.println("Nhập email");
+        String email;
+        while (true){
+            email = sc.nextLine();
+            // biểu thức chính quy       "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"// fo+mat của email
+            if (email.matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")) {
+                System.out.println("đúng định dạng");
+            } else {
+                System.out.println("sai định dạng");
+                continue;
+            }
+            if (username.length() < 5 || username.length() > 50){
+                System.err.println("Username phải có độ dài từ 5 đến 50 ký tự");
+                continue;
+            }
+            boolean check = qlAccountController.exitsByEmail(email);
+            if (check){
+                System.err.println("Email đã tồn tại");
+                continue;
+            }
+            break;
+        }
+        int depId ;
+        int posId;
+        Account account = null;
+        List<Position> positions = qlAccountController.getAllPosition();
+        Position position = null;
+        while (true){
+            System.out.println("Nhập position id");
+            System.out.println("+-----+--------------------+");
+            System.out.printf("|%5s|%20s|\n","ID","Name");
+            System.out.println("+-----+--------------------+");
+            for (Position pos: positions){
+                System.out.printf("|%5s|%20s|\n", pos.getId(), pos.getName());
+            }
+            System.out.println("+-----+--------------------+");
+            posId = sc.nextInt();
+            sc.nextLine();
+            boolean check = false;
+            for (Position pos: positions){
+                if (pos.getId() == posId){
+                    position = pos;
+                    check = true;
+                    break;
+                }
+            }
+            if (check ){
+                break;
+            }else {
+                System.out.println("ID chức vụ chưa đúng, nhập lại!!");
+            }
+        }
+
+        List<Department> departments = qlAccountController.getallDepartment();
+        Department department = null;
+        while (true){
+            System.out.println("Nhập department id");
+            System.out.println("+-----+--------------------+");
+            System.out.printf("|%5s|%20s|\n","ID","Name");
+            System.out.println("+-----+--------------------+");
+            for (Department dep : departments){
+                System.out.printf("|%5s|%20s|\n", dep.getId(), dep.getName());
+            }
+            System.out.println("+-----+--------------------+");
+            depId = sc.nextInt();
+            sc.nextLine();
+            boolean check = false;
+            for (Department dep: departments){
+                if (dep.getId() == depId){
+                    department = dep;
+                    check = true;
+                    break;
+                }
+            }
+            if (check )  {
+                break;
+            }else {
+                System.out.println("ID chưa đúng, nhập lại!!");
+            }
+        }
+
+        account = new Account(position, department, fullName, email, username);
+
+        boolean check = qlAccountController.themMoiAccount(account);
+        if (check){
+            System.out.println("Thêm mới thành công");
+        }else {
+            System.out.println("Thêm mới thất bại");
         }
     }
 
@@ -189,6 +348,7 @@ public class Function {
 //                    iql2.timKiemDepartmentTheoTen();
                     break;
                 case "5":
+                    this.themMoiAccount();
 //                    iql1.themMoiAccount();
                     break;
                 case "6":
@@ -211,8 +371,8 @@ public class Function {
 //                    iql2.capNhatDepartmentTheoid();
                     break;
                 case "11":
-//                    System.out.println("THOÁT.");
-//                    System.exit(0);
+                    System.out.println("THOÁT.");
+                    System.exit(0);
                     break;
                 default:
                     System.out.println("NHẬP SAI MỜI NHẬP LẠI ");

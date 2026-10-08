@@ -3,6 +3,7 @@ package backend.controller;
 import backend.IQLDepartment;
 import backend.service.IQLDepartmentService;
 import backend.service.impl.QLDepartmentServiceImpl;
+import entity.Account;
 import entity.Department;
 
 import java.util.List;
@@ -30,4 +31,7 @@ public QLDepartmentController() {
     public boolean updateDepById(int departmentId, String name) {
     return departmentService.updateDepById(departmentId, name);
     }
+
+
+
 }

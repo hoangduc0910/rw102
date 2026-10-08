@@ -7,12 +7,20 @@ public class Account {
     private String email;
     private Department department;
     private Position position;
-
-    public Account() {
-    }
+//
+//    public Account(int posId, int depId, String fullName, String email, String username) {
+//    }
 
     public Account(int id, Position position, Department department, String fullName, String email, String userName) {
         this.id = id;
+        this.position = position;
+        this.department = department;
+        this.fullName = fullName;
+        this.email = email;
+        this.userName = userName;
+    }
+
+    public Account(Position position, Department department, String fullName, String email, String userName) {
         this.position = position;
         this.department = department;
         this.fullName = fullName;
